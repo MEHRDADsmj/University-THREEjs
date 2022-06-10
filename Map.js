@@ -1,5 +1,5 @@
 var gltf;
-var floor;
+var floor, ball;
 
 function CreateMap()
 {
@@ -35,6 +35,7 @@ function LoadModel()
 
 function AddGeometry()
 {
+    // Floor
     var loader = new THREE.TextureLoader();
     var floorTexture = loader.load("Assets/Textures/Floor.jpg");
     floorTexture.wrapS = THREE.RepeatWrapping;
@@ -46,4 +47,11 @@ function AddGeometry()
     floor.rotateX(-1.57);
     floor.position.set(0.0, -185.0, 0.0);
     scene.add(floor);
+
+    // Ball
+    var ballGeo = new THREE.SphereGeometry(128, 32, 32);
+    var ballMat = new THREE.MeshPhongMaterial( { color: 0x000022 } );
+    ball = new THREE.Mesh(ballGeo, ballMat);
+    ball.position.set(500.0, 0.0, 0.0);
+    scene.add(ball);
 }

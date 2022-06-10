@@ -7,8 +7,8 @@ function Init()
     TBI();
     CreateMap();
     PlaySound();
-
     SetupControls();
+    InitCannon();
 }
 
 // Three basic init
@@ -32,6 +32,7 @@ function Animate()
 {
     requestAnimationFrame(Animate);
     renderer.render(scene, camera);
+    UpdatePhysics();
     controls.update();
 }
 
