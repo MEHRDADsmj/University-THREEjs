@@ -1,10 +1,13 @@
 var gltf;
 var floor, ball;
+var particles, geometry, materials = [], parameters, i, h, color, sprite, size;
+var clock = new THREE.Clock();
 
 function CreateMap()
 {
     AddLights();
     AddGeometry();
+    AddParticles();
     LoadModel();
 }
 
@@ -54,4 +57,68 @@ function AddGeometry()
     ball = new THREE.Mesh(ballGeo, ballMat);
     ball.position.set(500.0, 0.0, 0.0);
     scene.add(ball);
+}
+
+function AddParticles()
+{
+    geometry = new THREE.Geometry();
+    var textureLoader = new THREE.TextureLoader();
+
+    sprite1 = textureLoader.load("Assets/Textures/snowflake.png");
+    sprite2 = textureLoader.load("Assets/Textures/snowflake.png");
+    sprite3 = textureLoader.load("Assets/Textures/snowflake.png");
+    sprite4 = textureLoader.load("Assets/Textures/snowflake.png");
+    sprite5 = textureLoader.load("Assets/Textures/snowflake.png");
+    sprite6 = textureLoader.load("Assets/Textures/snowflake.png");
+
+    for (i = 0; i < 4000; i++) {
+        var vertex = new THREE.Vector3();
+        vertex.x = Math.random() * 2000 - 1000;
+        vertex.y = Math.random() * 2000 - 1000;
+        vertex.z = Math.random() * 2000 - 1000;
+        geometry.vertices.push(vertex);
+    }
+
+    parameters = [
+        // [[Color in HSL], texture, size
+        [[1.0, 0.2, 0.5], sprite2, 1],
+        [[0.95, 0.1, 0.5], sprite3, 2],
+        [[0.90, 0.05, 0.5], sprite1, 3],
+        [[0.85, 0, 0.5], sprite5, 1.5],
+        [[0.80, 0, 0.5], sprite4, 2.5],
+        [[0.75, 0, 0.5], sprite6,3.5]
+    ];
+
+    for (i = 0; i < parameters.length; i++) {
+        color = parameters[i][0];
+        sprite = parameters[i][1];
+        size = parameters[i][2];
+
+        materials[i] = new THREE.PointsMaterial({
+            size: size,
+            map: sprite,
+            blending: THREE.AdditiveBlending,
+            depthTest: false,
+            transparent: true
+        });
+
+        materials[i].color.setHSL(color[0], color[1], color[2]);
+        particles = new THREE.Points(geometry, materials[i]);
+        particles.rotation.x = Math.random() * 6;
+        particles.rotation.y = Math.random() * 6;
+        particles.rotation.z = Math.random() * 6;
+        scene.add(particles);
+    }
+}
+
+function UpdateMap()
+{
+    var t = (Date.now() / 1000);
+    for (i = 0; i < scene.children.length; i++) {
+
+        var object = scene.children[i];
+        if (object instanceof THREE.Points) {
+            object.rotation.y = t * ( i < 400 ? i + 1 : -( i + 1 ) );
+        }
+    }
 }

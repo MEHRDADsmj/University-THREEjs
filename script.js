@@ -32,6 +32,7 @@ function Animate()
 {
     requestAnimationFrame(Animate);
     renderer.render(scene, camera);
+    UpdateMap();
     UpdatePhysics();
     controls.update();
 }
@@ -43,7 +44,7 @@ function SetupControls()
     controls.enableDamping = true;
     controls.dampingFactor = 0.25
     controls.autoRotate = true;
-    controls.autoRotateSpeed = 0.1;
+    controls.autoRotateSpeed = 0.2;
 }
 
 window.onload = function ()
